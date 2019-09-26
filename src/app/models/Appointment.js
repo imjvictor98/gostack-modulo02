@@ -3,20 +3,15 @@
 /* eslint-disable eol-last */
 /* eslint-disable indent */
 /* eslint-disable no-trailing-spaces */
+
 import Sequelize, { Model } from 'sequelize';
 
-class File extends Model {
+class Appointment extends Model {
   static init(sequelize) {
     super.init(
       {
-        name: Sequelize.STRING,
-        path: Sequelize.STRING,
-        url: {
-          type: Sequelize.VIRTUAL,
-          get() { // como eu quero formatar esse valor, no caso, o valor da url
-            return `${process.env.APP_URL}/files/${this.path}`;
-          },
-        },
+        date: Sequelize.DATE,
+        canceled_at: Sequelize.DATE,
       },
       {
         sequelize,
@@ -24,5 +19,11 @@ class File extends Model {
     );
     return this;
   }
+
+  static associate(models) {
+    this.belongsTo(models.User, { foreignKey: 'user_id', as: 'user' });
+    this.belongsTo(models.User, { foreignKey: 'provider_id', as: 'provider' });
+  }
 }
-export default File;
+
+export default Appointment;
